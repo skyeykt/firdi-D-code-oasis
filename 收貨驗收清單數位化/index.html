@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>收貨驗收清單數位化</title>
+  <!-- Google Fonts Outfit & Noto Sans TC -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+  <div class="glass-bg"></div>
+  <div class="app-container">
+    
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/>
+          <path d="m9 12 2 2 4-4"/>
+        </svg>
+        <span>RECEIPT<span class="highlight">IQ</span></span>
+      </div>
+      <nav class="sidebar-menu">
+        <button class="nav-btn active" data-tab="active-inspection">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 11 12 14 22 4"/>
+            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+          </svg>
+          <span>收貨驗收</span>
+        </button>
+        <button class="nav-btn" data-tab="history-logs">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 8v4l3 3"/>
+            <path d="M3.05 11a9 9 0 1 1 .05.2v-.2z"/>
+          </svg>
+          <span>歷史驗收紀錄</span>
+        </button>
+        <button class="nav-btn" data-tab="vendor-analytics">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 3v18h18"/>
+            <path d="m19 9-5 5-4-4-3 3"/>
+          </svg>
+          <span>供應商分析</span>
+        </button>
+      </nav>
+      <div class="sidebar-footer">
+        <button id="api-config-btn" class="icon-btn-text">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mini-icon">
+            <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.1a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+          <span>Gemini 設定</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      
+      <!-- Top Action Bar -->
+      <header class="top-bar">
+        <div class="search-bar-container">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="m21 21-4.3-4.3"/>
+          </svg>
+          <input type="text" id="barcode-input" placeholder="請掃描外箱條碼或輸入品項編號搜尋..." />
+          <button id="camera-scan-btn" class="action-btn-secondary mini-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mini-icon">
+              <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+              <circle cx="12" cy="13" r="4"/>
+            </svg>
+            <span>相機掃描</span>
+          </button>
+        </div>
+        <div class="user-profile">
+          <span class="badge offline" id="connection-status">離線暫存模式</span>
+          <span class="user-name">驗收專員 Tseyu</span>
+        </div>
+      </header>
+
+      <!-- TAB 1: ACTIVE INSPECTION -->
+      <section id="active-inspection" class="tab-panel active">
+        <div class="panel-header">
+          <div>
+            <h1>收貨驗收作業</h1>
+            <p class="panel-subtitle">請比對實物並勾選狀態，異常項目請標明原因並上傳影像證物。</p>
+          </div>
+          <div class="receipt-selector-wrapper">
+            <label for="po-select">選擇採購單 (PO)：</label>
+            <select id="po-select" class="select-input">
+              <option value="PO-2026060401">PO-2026060401 (小農鮮奶 & 蔬果配送)</option>
+              <option value="PO-2026060402">PO-2026060402 (高階電子元器件與感測器)</option>
+              <option value="PO-2026060403">PO-2026060403 (低溫冷凍肉品與海鮮)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Receipt Metadata Card -->
+        <div class="glass-card metadata-card">
+          <div class="meta-grid">
+            <div class="meta-item">
+              <span class="meta-label">單號 (PO Number)</span>
+              <span class="meta-value" id="meta-po-no">PO-2026060401</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">供應商 (Supplier)</span>
+              <span class="meta-value" id="meta-supplier">大地小農鮮果合作社</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">預計交期 (Expected Date)</span>
+              <span class="meta-value" id="meta-date">2026-06-04</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">溫控類別 (Temp Class)</span>
+              <span class="meta-value" id="meta-temp">冷藏 (0℃ ~ 7℃)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Progress Lock Section -->
+        <div class="progress-container glass-card">
+          <div class="progress-header">
+            <span>驗收完成進度</span>
+            <span id="progress-percentage">0%</span>
+          </div>
+          <div class="progress-bar-outer">
+            <div class="progress-bar-inner" id="progress-bar" style="width: 0%"></div>
+          </div>
+          <p class="progress-tip" id="progress-status-text">請勾選所有品項狀態以解鎖提交按鈕。</p>
+        </div>
+
+        <!-- Checklist Table Area -->
+        <div class="checklist-wrapper">
+          <h2 class="section-title">品項清單</h2>
+          <div class="checklist-items" id="checklist-container">
+            <!-- Items rendered dynamically in JS -->
+          </div>
+        </div>
+
+        <!-- Inspection Results Summary & AI panel -->
+        <div class="bottom-action-grid">
+          <!-- Results Summary Card -->
+          <div class="glass-card summary-card">
+            <h3>驗收結果摘要</h3>
+            <div class="summary-stats">
+              <div class="stat-box">
+                <span class="stat-val" id="summary-total-items">0</span>
+                <span class="stat-lbl">品項總數</span>
+              </div>
+              <div class="stat-box">
+                <span class="stat-val text-success" id="summary-passed-items">0</span>
+                <span class="stat-lbl">合格品項</span>
+              </div>
+              <div class="stat-box">
+                <span class="stat-val text-danger" id="summary-failed-items">0</span>
+                <span class="stat-lbl">未過品項</span>
+              </div>
+              <div class="stat-box">
+                <span class="stat-val" id="summary-pass-rate">0%</span>
+                <span class="stat-lbl">到貨合格率</span>
+              </div>
+            </div>
+            <div class="summary-actions">
+              <button id="reset-inspection-btn" class="action-btn-secondary">
+                重置表單
+              </button>
+              <button id="submit-inspection-btn" class="action-btn-primary" disabled>
+                確認並送出驗收單
+              </button>
+            </div>
+          </div>
+
+          <!-- AI Report Generation Panel -->
+          <div class="glass-card ai-card">
+            <div class="ai-header">
+              <div class="ai-title-desc">
+                <h3>AI 驗收異常與處置報告</h3>
+                <p>一鍵生成適用於採購協商與供應商扣款的異常分析書</p>
+              </div>
+              <div class="tone-selector-wrapper">
+                <label for="ai-tone">報告語氣：</label>
+                <select id="ai-tone" class="select-input select-mini">
+                  <option value="business">商務客觀</option>
+                  <option value="strict">嚴厲警告</option>
+                  <option value="friendly">溫和協商</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="ai-output-container">
+              <div id="ai-empty-state" class="ai-state-placeholder">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="ai-large-icon">
+                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                  <path d="M7.5 8.9 12 11.5l4.5-2.6M12 22.5V11.5"/>
+                </svg>
+                <p>請勾選不合格品項並點擊下方按鈕，AI 將自動生成分析</p>
+              </div>
+              <div id="ai-loading-state" class="ai-state-placeholder hidden">
+                <div class="spinner"></div>
+                <p>AI 分析報告生成中，請稍候...</p>
+              </div>
+              <div id="ai-result-state" class="ai-result-content hidden">
+                <div class="result-header">
+                  <span class="report-badge">AI 產出說明書</span>
+                  <button id="copy-ai-btn" class="icon-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mini-icon">
+                      <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                    </svg>
+                    <span>複製</span>
+                  </button>
+                </div>
+                <textarea id="ai-text-output" readonly></textarea>
+              </div>
+            </div>
+            <button id="generate-ai-report-btn" class="action-btn-accent" disabled>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mini-icon">
+                <path d="m12 3-1.912 5.886L4.202 9l5.886 1.912L12 16.798l1.912-5.886L19.798 9l-5.886-1.912z"/>
+              </svg>
+              <span>自動產驗收不合格報告</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 2: HISTORY LOGS -->
+      <section id="history-logs" class="tab-panel">
+        <div class="panel-header">
+          <div>
+            <h1>歷史驗收紀錄</h1>
+            <p class="panel-subtitle">檢視並管理本機已送出的歷史驗收單。</p>
+          </div>
+          <div class="history-actions">
+            <input type="file" id="csv-import-file" accept=".csv" class="hidden" />
+            <button id="csv-import-btn" class="action-btn-secondary mini-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mini-icon">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="17 8 12 3 7 8"/>
+                <line x1="12" y1="3" x2="12" y2="15"/>
+              </svg>
+              <span>匯入 CSV 歷史資料</span>
+            </button>
+          </div>
+        </div>
+        <div class="glass-card table-card">
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>驗收單號</th>
+                  <th>採購單號 (PO)</th>
+                  <th>供應商</th>
+                  <th>合格率</th>
+                  <th>未過項目數</th>
+                  <th>驗收日期</th>
+                  <th>狀態</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody id="history-table-body">
+                <!-- Populated dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 3: VENDOR ANALYTICS -->
+      <section id="vendor-analytics" class="tab-panel">
+        <div class="panel-header">
+          <div>
+            <h1>供應商表現分析 (KPI)</h1>
+            <p class="panel-subtitle">以近期驗收數據分析供應商到貨品質，做為合約評估基準。</p>
+          </div>
+        </div>
+        
+        <!-- Analytics KPI Grid -->
+        <div class="kpi-grid">
+          <div class="kpi-card glass-card border-left-blue">
+            <div class="kpi-info">
+              <span class="kpi-title">總驗收單數</span>
+              <span class="kpi-value" id="kpi-total-receipts">0</span>
+            </div>
+          </div>
+          <div class="kpi-card glass-card border-left-green">
+            <div class="kpi-info">
+              <span class="kpi-title">平均到貨合格率</span>
+              <span class="kpi-value" id="kpi-avg-pass-rate">0%</span>
+            </div>
+          </div>
+          <div class="kpi-card glass-card border-left-red">
+            <div class="kpi-info">
+              <span class="kpi-title">最常發生異常原因</span>
+              <span class="kpi-value" id="kpi-common-defect">-</span>
+            </div>
+          </div>
+          <div class="kpi-card glass-card border-left-yellow">
+            <div class="kpi-info">
+              <span class="kpi-title">待改善供應商</span>
+              <span class="kpi-value" id="kpi-worst-vendor">-</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="analytics-charts-grid">
+          <!-- Vendor Ranking Chart (Custom SVG based) -->
+          <div class="glass-card chart-container-card">
+            <h3>各供應商到貨合格率排名</h3>
+            <div class="chart-content" id="vendor-bar-chart">
+              <!-- Rendered via Javascript using dynamic CSS bars -->
+            </div>
+          </div>
+
+          <!-- Defect Category Breakdown (Custom SVG based) -->
+          <div class="glass-card chart-container-card">
+            <h3>驗收不合格原因佔比</h3>
+            <div class="chart-content" id="defect-pie-chart">
+              <!-- Rendered via Javascript using dynamic SVGs -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- API CONFIG MODAL -->
+  <div id="api-modal" class="modal-overlay hidden">
+    <div class="glass-card modal-card">
+      <div class="modal-header">
+        <h3>Gemini API 設定</h3>
+        <button id="close-modal-btn" class="icon-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mini-icon">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-desc">您可以填入您的 Gemini API 金鑰。系統將會直接調用大語言模型來產生客製化的驗收不合格說明書，而不僅僅使用本地模板拼裝。</p>
+        <div class="input-group">
+          <label for="api-key-input">Gemini API Key：</label>
+          <input type="password" id="api-key-input" placeholder="AIzaSy..." class="text-input" />
+        </div>
+        <div class="input-group">
+          <label for="api-model-select">選用模型：</label>
+          <select id="api-model-select" class="select-input">
+            <option value="gemini-1.5-flash">Gemini 1.5 Flash (快速 & 推薦)</option>
+            <option value="gemini-1.5-pro">Gemini 1.5 Pro (推理能力更強)</option>
+          </select>
+        </div>
+        <p class="modal-note">*金鑰將僅儲存於您個人的瀏覽器 LocalStorage 中，不會傳遞至其他後端伺服器。</p>
+      </div>
+      <div class="modal-footer">
+        <button id="save-api-btn" class="action-btn-primary">儲存設定</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- BARCODE SCANNER MOCK MODAL -->
+  <div id="scanner-modal" class="modal-overlay hidden">
+    <div class="glass-card modal-card scanner-card">
+      <div class="modal-header">
+        <h3>條碼掃描模擬與輸入</h3>
+        <button id="close-scanner-btn" class="icon-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mini-icon">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body text-center">
+        <div class="mock-scanner-view">
+          <div class="laser-line"></div>
+          <div class="scanner-brackets"></div>
+          <p class="mock-scanner-text">正在偵測包裝條碼...</p>
+        </div>
+        <div class="scanner-options">
+          <p class="modal-desc">請選取您要模擬掃描的品項條碼：</p>
+          <div class="scan-preset-buttons" id="barcode-presets-list">
+            <!-- Injected by JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="history_data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

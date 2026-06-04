@@ -1,0 +1,86 @@
+<mxfile host="Electron" modified="2026-06-04T12:00:00.000Z" agent="5.0" version="20.0.0" type="device">
+  <diagram id="diagram_1" name="Goods Receipt Architecture">
+    <mxGraphModel dx="1000" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <!-- User Node -->
+        <mxCell id="node_user" value="&lt;b&gt;驗收人員 (User)&lt;/b&gt;" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#e1f5fe;strokeColor=#0288d1;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="50" y="250" width="30" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- Web App UI Container -->
+        <mxCell id="group_ui" value="&lt;b&gt;瀏覽器前端 UI 組件 (Browser Web UI)&lt;/b&gt;" style="swimlane;whiteSpace=wrap;html=1;fillColor=#efebe9;strokeColor=#5d4037;strokeWidth=2;startSize=23;" vertex="1" parent="1">
+          <mxGeometry x="170" y="90" width="220" height="380" as="geometry" />
+        </mxCell>
+        <mxCell id="ui_checklist" value="強制防漏驗收清單" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#7f8c8d;" vertex="1" parent="group_ui">
+          <mxGeometry x="20" y="40" width="180" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ui_scanner" value="條碼掃描器 (相機/手動)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#7f8c8d;" vertex="1" parent="group_ui">
+          <mxGeometry x="20" y="95" width="180" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ui_photo" value="缺陷拍照/圖片上傳" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#7f8c8d;" vertex="1" parent="group_ui">
+          <mxGeometry x="20" y="150" width="180" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ui_ai" value="AI 不合格說明生成面板" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#7f8c8d;" vertex="1" parent="group_ui">
+          <mxGeometry x="20" y="205" width="180" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ui_summary" value="結果摘要與 PDF 匯出" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#7f8c8d;" vertex="1" parent="group_ui">
+          <mxGeometry x="20" y="260" width="180" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ui_dashboard" value="供應商 KPI 分析儀表板" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#7f8c8d;" vertex="1" parent="group_ui">
+          <mxGeometry x="20" y="315" width="180" height="40" as="geometry" />
+        </mxCell>
+        
+        <!-- Controller / Core Logic Container -->
+        <mxCell id="group_logic" value="&lt;b&gt;核心業務邏輯與引擎 (Controller)&lt;/b&gt;" style="swimlane;whiteSpace=wrap;html=1;fillColor=#e8f5e9;strokeColor=#2e7d32;strokeWidth=2;startSize=23;" vertex="1" parent="1">
+          <mxGeometry x="460" y="150" width="220" height="260" as="geometry" />
+        </mxCell>
+        <mxCell id="logic_state" value="狀態管理器 (Auto-save / Offline)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#27ae60;" vertex="1" parent="group_logic">
+          <mxGeometry x="20" y="40" width="180" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="logic_ai" value="AI 說明分析生成器 (動態模板+API)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#27ae60;" vertex="1" parent="group_logic">
+          <mxGeometry x="20" y="95" width="180" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="logic_analytics" value="供應商數據 KPI 引擎" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#27ae60;" vertex="1" parent="group_logic">
+          <mxGeometry x="20" y="150" width="180" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="logic_exporter" value="PDF / CSV 報表匯出組件" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#27ae60;" vertex="1" parent="group_logic">
+          <mxGeometry x="20" y="205" width="180" height="40" as="geometry" />
+        </mxCell>
+        
+        <!-- Local Storage Database -->
+        <mxCell id="db_local" value="&lt;b&gt;本地資料儲存&lt;/b&gt;&lt;br&gt;(Browser LocalStorage)&lt;br&gt;[歷史單據、圖片、統計]" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#fff3e0;strokeColor=#f57c00;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="750" y="140" width="150" height="100" as="geometry" />
+        </mxCell>
+        
+        <!-- External Gemini API -->
+        <mxCell id="api_gemini" value="&lt;b&gt;外部 Gemini AI API&lt;/b&gt;&lt;br&gt;(選用，需要 API Key)" style="ellipse;shape=cloud;whiteSpace=wrap;html=1;fillColor=#f3e5f5;strokeColor=#8e24aa;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="740" y="300" width="170" height="100" as="geometry" />
+        </mxCell>
+        
+        <!-- Connections -->
+        <!-- User to UI -->
+        <mxCell id="edge_user_ui" value="操作 / 瀏覽" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="node_user" target="group_ui">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- UI to Logic -->
+        <mxCell id="edge_ui_logic" value="傳遞事件" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="group_ui" target="group_logic">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- Logic to Database -->
+        <mxCell id="edge_logic_db" value="自動存檔 / 讀取" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="group_logic" target="db_local">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- Logic to Gemini API -->
+        <mxCell id="edge_logic_api" value="真實 AI 生成" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.75;exitDx=0;exitDy=0;entryX=0.07;entryY=0.4;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="group_logic" target="api_gemini">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
